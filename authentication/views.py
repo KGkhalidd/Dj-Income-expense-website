@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 
 
 from django.urls import reverse
-from django.utils.encoding import force_bytes, DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes,force_str, DjangoUnicodeDecodeError
 #force_bytes takes a Unicode string and returns a byte string, 
 #while force_text takes a byte string and returns a Unicode string.
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -108,5 +108,38 @@ class RegistrationView(View):
 
 class VerificationView(View):
     def get(self,request, uidb64, token):
-        return redirect('login')
+
+            
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=id)
+                
+            
+            
+            if not token_generator.check_token(user, token):
+                messages.warning(request,'User already activated')
+                
+            
+            elif user.is_active:
+                messages.warning(request,'User already activated')
+                
+
+            elif user is not None and token_generator.check_token(user, token):
+                user.is_active = True
+                user.save()
+                messages.success(request, 'Account activated successfully')
+                
+                
+            else:
+                messages.error(request, 'Activation link is invalid!')
+                
+            
+        
+            return redirect('login')
+    
+
+
+
+class LoginView(View):
+    def get(self,request):
+        return render(request, 'authentication/login.html')
 
