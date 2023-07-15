@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.shortcuts import redirect
+from django.contrib import auth
 
 
 from django.urls import reverse
@@ -22,6 +23,7 @@ from django.contrib.sites.shortcuts import get_current_site
 #This function is often used when generating URLs or links that include the current site's domain or other information.
 
 from .utils import token_generator
+
 
 
 # Create your views here.
@@ -142,4 +144,35 @@ class VerificationView(View):
 class LoginView(View):
     def get(self,request):
         return render(request, 'authentication/login.html')
+
+    def post(self, request):
+        username= request.POST['username']
+        password= request.POST['password']
+
+        
+
+        if username and password:
+            user= auth.authenticate(username=username , password=password)
+
+            if user is not None:
+                if user.is_active:
+                    auth.login(request, user)
+                    messages.success(request, f'Welcome, {user.username} you are now logged in')
+                    return redirect('expenses')
+                
+                messages.error(request, 'Account is not active , Please check your email to activate it!')
+                return render(request, 'authentication/login.html')
+
+            messages.error(request, 'Invalid login credentials. Please try again.')
+            return render(request, 'authentication/login.html')
+        
+        messages.error(request, 'Please fill all fields')
+        return render(request, 'authentication/login.html')
+
+
+class LogoutView(View):
+    def post(self,request):
+        auth.logout(request)
+        messages.success(request, 'You have been logged out')
+        return redirect('login')
 
