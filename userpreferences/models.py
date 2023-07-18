@@ -9,4 +9,4 @@ class UserPreferences(models.Model):
 
 
     def __str__(self):
-        return str(self.user)+"'s preferences" 
+        return f"{str(self.user)}'s preferences"
