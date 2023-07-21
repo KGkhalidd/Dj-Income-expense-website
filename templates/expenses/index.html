@@ -50,20 +50,20 @@
     </thead>
 
     <tbody>
-      {% for expense in expenses %}
+      {% for expense in page_obj %}
       <tr>
         <td>{{expense.amount}}</td>
         <td>{{expense.category}}</td>
         <td>{{expense.description}}</td>
         <td>{{expense.date}}</td>
 
-        {% comment %} <td>
+        <td>
           <a
             href="{% url 'expense-edit' expense.id  %}"
             class="btn btn-secondary btn-sm"
             >Edit</a
           >
-        </td> {% endcomment %}
+        </td>
       </tr>
 
       {% endfor %}
@@ -71,27 +71,7 @@
   </table>
 </div>
 
-<p class="no-results" style="display: none;">No results </p>
-    <div class="table-output">
 
-
-      <table class="table table-stripped table-hover">
-        <thead>
-          <tr>
-            <th>Amount ({{currency}})</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th></th>
-          </tr>
-        </thead>
-
-        <tbody  class="table-body">
-
-
-        </tbody>
-      </table>
-    </div>
 
 
 
@@ -122,8 +102,6 @@
 
 
 
-
-</script>
 
 
 
