@@ -16,11 +16,8 @@
     </div>
 
     <div class="col-md-2">
-      <a
-        href="{% url 'expense-delete' expense.id %}"
-        class="btn btn-danger btn-sm"
-        >Delete</a
-      >
+      
+      <a href="{% url 'expense-delete' expense.id %}" onclick='return confirmDelete();' class="btn btn-danger btn-sm" >Delete</a>
     </div>
   </div>
 
